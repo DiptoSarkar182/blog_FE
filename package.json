@@ -13,5 +13,8 @@
     "axios": "^1.7.3",
     "nuxt": "^3.12.4",
     "vue": "latest"
+  },
+  "devDependencies": {
+    "dotenv": "^16.4.5"
   }
 }
