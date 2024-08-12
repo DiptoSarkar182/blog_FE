@@ -1,26 +1,34 @@
 <template>
   <div class="home">
     <header>
-      <h1 v-if="isLoggedIn">Hello, {{ user.name }} ({{ user.email }})</h1>
-      <h1 v-else>Welcome to My Website</h1>
-      <p>Your one-stop solution for all your needs.</p>
-      <div v-if="isLoggedIn">
-        <button @click="handleLogout" class="btn">Logout</button>
-      </div>
-      <div v-else>
-        <NuxtLink to="/login" class="btn">Login</NuxtLink>
-      </div>
+      <h1 v-if="isLoggedIn">Welcome, {{ user?.name }}</h1>
     </header>
+    <div>
+      <button @click="navigateToBlogCreate">New Post</button>
+    </div>
+    <div v-if="!isLoggedIn || blogs.length > 0">
+      <h2>Latest Blogs</h2>
+      <ul>
+        <li v-for="blog in blogs" :key="blog.id">
+          <nuxt-link :to="`/blog_show/${blog.id}`">
+            <h3>{{ blog.title }}</h3>
+          </nuxt-link>
+          <p><strong>Author:</strong> {{ blog.name }}</p>
+          <p><strong>Posted on:</strong> {{ new Date(blog.created_at).toLocaleString() }}</p>
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, inject } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
 import { useAuth } from '../store'
 
 const user = ref(null)
+const blogs = ref([])
 const { isLoggedIn } = useAuth()
 const router = useRouter()
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
@@ -29,23 +37,37 @@ onMounted(() => {
   const token = localStorage.getItem('authToken')
   if (token) {
     fetchUserDetails(token)
+  } else {
+    fetchBlogs()
   }
 })
 
 const fetchUserDetails = async (token) => {
   try {
     const response = await axios.get(`${API_BASE_URL}/users/profile`, {
-      headers: {
+ headers: {
         Authorization: `Bearer ${token}`
       }
     })
     if (response.status === 200) {
       user.value = response.data.user
       isLoggedIn.value = true
+      fetchBlogs() // Fetch blogs after setting user details
     }
   } catch (error) {
     console.error('Failed to fetch user details:', error)
     handleLogout()
+  }
+}
+
+const fetchBlogs = async () => {
+  try {
+    const response = await axios.get('http://127.0.0.1:3000/blogs')
+    if (response.status === 200 && response.data.status === 'success') {
+      blogs.value = response.data.data
+    }
+  } catch (error) {
+    console.error('Failed to fetch blogs:', error)
   }
 }
 
@@ -67,8 +89,17 @@ const handleLogout = async () => {
     console.error('Failed to logout:', error)
   }
 }
+
+const navigateToBlogCreate = () => {
+  if (isLoggedIn.value) {
+    router.push('/blog_create')
+  } else {
+    alert('You need to sign in')
+    router.push('/login')
+  }
+}
 </script>
-  
-  <style scoped>
-  /* Add your styles here */
-  </style>
+
+<style scoped>
+/* Add your styles here */
+</style>
