@@ -62,7 +62,7 @@ const fetchUserDetails = async (token) => {
 
 const fetchBlogs = async () => {
   try {
-    const response = await axios.get('http://127.0.0.1:3000/blogs')
+    const response = await axios.get(`${API_BASE_URL}/blogs`)
     if (response.status === 200 && response.data.status === 'success') {
       blogs.value = response.data.data
     }
