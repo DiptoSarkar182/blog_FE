@@ -38,6 +38,7 @@ const handleLogin = async () => {
 
     if (response.data.status.code === 200) {
       localStorage.setItem('authToken', response.data.status.token)
+      localStorage.setItem('userId', response.data.status.data.user.id)
       router.push('/')
     } else {
       errorMessage.value = response.data.status.message || 'Invalid email or password'
