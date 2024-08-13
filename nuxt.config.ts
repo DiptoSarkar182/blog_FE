@@ -8,4 +8,8 @@ export default defineNuxtConfig({
   plugins: [
     '~/plugins/toast.js'
   ],
+  modules: ['@nuxt/image'],
+  image: {
+    // Options
+  },
 })

@@ -15,6 +15,7 @@
           </nuxt-link>
           <p><strong>Author:</strong> {{ blog.name }}</p>
           <p><strong>Posted on:</strong> {{ new Date(blog.created_at).toLocaleString() }}</p>
+          <nuxt-img v-if="blog.blog_image_url" :src="blog.blog_image_url" alt="Blog Image" />
         </li>
       </ul>
     </div>
@@ -45,7 +46,7 @@ onMounted(() => {
 const fetchUserDetails = async (token) => {
   try {
     const response = await axios.get(`${API_BASE_URL}/users/profile`, {
- headers: {
+      headers: {
         Authorization: `Bearer ${token}`
       }
     })
@@ -101,5 +102,25 @@ const navigateToBlogCreate = () => {
 </script>
 
 <style scoped>
-/* Add your styles here */
+.home {
+  max-width: 800px;
+  margin: 0 auto;
+}
+.home header {
+  text-align: center;
+  margin-bottom: 2em;
+}
+.home ul {
+  list-style: none;
+  padding: 0;
+}
+.home li {
+  margin-bottom: 2em;
+}
+.home img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin-top: 1em;
+}
 </style>

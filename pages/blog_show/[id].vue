@@ -3,6 +3,7 @@
     <h2>{{ blog.title }}</h2>
     <p><strong>Author:</strong> {{ blog.name }}</p>
     <p><strong>Posted on:</strong> {{ new Date(blog.created_at).toLocaleString() }}</p>
+    <nuxt-img v-if="blog.blog_image_url" :src="blog.blog_image_url" alt="Blog Image" />
     <p>{{ blog.content }}</p>
     <div v-if="isOwner">
       <router-link :to="`/blog_edit/${blog.id}`">
@@ -98,5 +99,11 @@ onMounted(() => {
 .blog-show {
   max-width: 600px;
   margin: 0 auto;
+}
+.blog-show img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin-top: 1em;
 }
 </style>
