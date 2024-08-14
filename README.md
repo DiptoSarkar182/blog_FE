@@ -1,6 +1,27 @@
-# Nuxt 3 Minimal Starter
+# BlogWebsite
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+## Introduction
+
+This is a blog website with user authentication, authorization, and Blog CRUD operations with optional 
+image upload.
+
+## Backend Repository and Live Link
+- BE Repo: https://github.com/DiptoSarkar182/blog_rails_api
+- Live Link: [https://blog-fe-sigma.vercel.app/](https://blog-fe-sigma.vercel.app/)
+
+## Features
+- User authentication and authorization
+- Create, read, update, and delete (CRUD) operations for blogs
+- Optional image upload for blogs
+- Responsive design using Tailwind CSS
+- Integration with a backend API for data persistence
+
+## Technology Used
+- Nuxt 3
+- Vue 3
+- Axios
+- Tailwind CSS
+- Nuxt Image
 
 ## Setup
 
