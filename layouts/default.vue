@@ -1,18 +1,18 @@
 <template>
   <div>
-    <header>
-      <nav>
-        <div class="logo">
-          <NuxtLink to="/">BlogWebsite</NuxtLink>
+    <header class="bg-gray-800 text-white p-4">
+      <nav class="flex justify-between items-center">
+        <div class="text-2xl font-bold">
+          <NuxtLink to="/" class="text-white hover:text-gray-300">BlogWebsite</NuxtLink>
         </div>
-        <div class="nav-links">
-          <NuxtLink v-if="!isLoggedIn" to="/login">Login</NuxtLink>
-          <NuxtLink v-if="!isLoggedIn" to="/signup">Signup</NuxtLink>
-          <a v-if="isLoggedIn" @click="logout" class="btn">Logout</a>
+        <div class="space-x-4">
+          <NuxtLink v-if="!isLoggedIn" to="/login" class="text-white hover:text-gray-300">Login</NuxtLink>
+          <NuxtLink v-if="!isLoggedIn" to="/signup" class="text-white hover:text-gray-300">Signup</NuxtLink>
+          <a v-if="isLoggedIn" @click="logout" class="btn bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded cursor-pointer">Logout</a>
         </div>
       </nav>
     </header>
-    <div v-if="isLoading" class="loading-message">
+    <div v-if="isLoading" class="loading-message text-center mt-4 text-lg text-gray-700">
       Please wait, waking up backend server...
     </div>
     <slot v-else />

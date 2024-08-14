@@ -1,26 +1,44 @@
 <template>
-  <div class="home">
-    <header>
-      <h1 v-if="isLoggedIn">Welcome, {{ user?.name }}</h1>
+  <div class="home p-4 bg-gray-100 min-h-screen">
+    <header class="mb-6">
+      <h1 v-if="isLoggedIn" class="text-3xl font-bold text-gray-800">Welcome, {{ user?.name }}</h1>
     </header>
-    <div>
-      <button @click="navigateToBlogCreate">New Post</button>
+    <div class="mb-6">
+      <button 
+        @click="navigateToBlogCreate"
+        class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
+      >
+        New Post
+      </button>
     </div>
     <div v-if="!isLoggedIn || blogs.length > 0">
-      <h2>Latest Blogs</h2>
-      <ul>
-        <li v-for="blog in blogs" :key="blog.id">
+      <h2 class="text-2xl font-semibold text-gray-700 mb-4">Latest Blogs</h2>
+      <ul class="space-y-4">
+        <li 
+          v-for="blog in blogs" 
+          :key="blog.id" 
+          class="bg-white shadow rounded-lg p-6"
+        >
           <nuxt-link :to="`/blog_show/${blog.id}`">
-            <h3>{{ blog.title }}</h3>
+            <h3 class="text-xl font-bold text-blue-600 hover:underline">
+              {{ blog.title }}
+            </h3>
           </nuxt-link>
-          <p><strong>Author:</strong> {{ blog.name }}</p>
-          <p><strong>Posted on:</strong> {{ new Date(blog.created_at).toLocaleString() }}</p>
-          <nuxt-img v-if="blog.blog_image_url" :src="blog.blog_image_url" alt="Blog Image" />
+          <p class="text-gray-600"><strong>Author:</strong> {{ blog.name }}</p>
+          <p class="text-gray-600"><strong>Posted on:</strong> {{ new Date(blog.created_at).toLocaleString() }}</p>
+          <nuxt-img 
+            v-if="blog.blog_image_url" 
+            :src="blog.blog_image_url" 
+            alt="Blog Image" 
+            class="mt-4 rounded-lg shadow w-64 h-40 object-cover"
+          />
         </li>
       </ul>
     </div>
   </div>
 </template>
+
+
 
 <script setup>
 import { ref, onMounted } from 'vue'

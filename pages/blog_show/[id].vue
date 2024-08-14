@@ -1,21 +1,32 @@
 <template>
-  <div class="blog-show" v-if="blog">
-    <h2>{{ blog.title }}</h2>
-    <p><strong>Author:</strong> {{ blog.name }}</p>
-    <p><strong>Posted on:</strong> {{ new Date(blog.created_at).toLocaleString() }}</p>
-    <nuxt-img v-if="blog.blog_image_url" :src="blog.blog_image_url" alt="Blog Image" />
-    <p>{{ blog.content }}</p>
-    <div v-if="isOwner">
+  <div class="blog-show max-w-3xl mx-auto p-6 bg-white shadow-md rounded-lg mt-10" v-if="blog">
+    <h2 class="text-3xl font-bold text-gray-800 mb-4">{{ blog.title }}</h2>
+    <p class="text-gray-600 mb-2"><strong>Author:</strong> {{ blog.name }}</p>
+    <p class="text-gray-600 mb-6"><strong>Posted on:</strong> {{ new Date(blog.created_at).toLocaleString() }}</p>
+    <nuxt-img 
+      v-if="blog.blog_image_url" 
+      :src="blog.blog_image_url" 
+      alt="Blog Image" 
+      class="w-full h-64 object-cover rounded-lg mb-6"
+    />
+    <p class="text-gray-700 leading-relaxed mb-6">{{ blog.content }}</p>
+    <div v-if="isOwner" class="flex space-x-4">
       <router-link :to="`/blog_edit/${blog.id}`">
-        <button>Edit Post</button>
+        <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition">Edit Post</button>
       </router-link>
-      <button @click="confirmDelete">Delete Post</button>
+      <button 
+        @click="confirmDelete" 
+        class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition"
+      >
+        Delete Post
+      </button>
     </div>
   </div>
-  <div v-else>
-    <p>Loading...</p>
+  <div v-else class="text-center mt-10">
+    <p class="text-gray-600">Loading...</p>
   </div>
 </template>
+
 
 <script setup>
 import { ref, onMounted } from 'vue'

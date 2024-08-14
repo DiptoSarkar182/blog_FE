@@ -1,28 +1,57 @@
 <template>
-  <div class="blog-form">
-    <h2>Create a New Blog Post</h2>
-    <form @submit.prevent="submitBlog">
+  <div class="blog-form max-w-lg mx-auto p-6 bg-white shadow-md rounded-lg mt-10">
+    <h2 class="text-2xl font-semibold text-gray-700 mb-6">Create a New Blog Post</h2>
+    <form @submit.prevent="submitBlog" class="space-y-4">
       <div>
-        <label for="title">Title:</label>
-        <input type="text" id="title" v-model="title" required />
+        <label for="title" class="block text-gray-600 font-medium mb-2">Title:</label>
+        <input 
+          type="text" 
+          id="title" 
+          v-model="title" 
+          required 
+          class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
       </div>
       <div>
-        <label for="content">Content:</label>
-        <textarea id="content" v-model="content" required></textarea>
+        <label for="content" class="block text-gray-600 font-medium mb-2">Content:</label>
+        <textarea 
+          id="content" 
+          v-model="content" 
+          required 
+          class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 h-32"
+        ></textarea>
       </div>
       <div>
-        <label for="blog_image">Image:</label>
-        <input type="file" id="blog_image" @change="handleFileUpload" />
+        <label for="blog_image" class="block text-gray-600 font-medium mb-2">Image:</label>
+        <input 
+          type="file" 
+          id="blog_image" 
+          @change="handleFileUpload" 
+          class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer"
+        />
       </div>
-      <button type="submit" :disabled="loading">Submit</button>
+      <button 
+        type="submit" 
+        :disabled="loading" 
+        class="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition disabled:bg-gray-300"
+      >
+        Submit
+      </button>
     </form>
-    <p v-if="message">{{ message }}</p>
-    <ul v-if="errors.length">
+    <p v-if="message" class="mt-4 text-green-500">{{ message }}</p>
+    <ul v-if="errors.length" class="mt-4 text-red-500 space-y-1">
       <li v-for="error in errors" :key="error">{{ error }}</li>
     </ul>
-    <div v-if="loading" class="spinner"></div>
+    <div v-if="loading" class="spinner mt-6 flex justify-center">
+      <!-- Optional: Spinner Icon for loading state -->
+      <svg class="animate-spin h-5 w-5 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+      </svg>
+    </div>
   </div>
 </template>
+
 
 <script setup>
 import { ref } from 'vue'

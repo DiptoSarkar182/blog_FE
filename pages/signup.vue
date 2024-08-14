@@ -1,28 +1,49 @@
 <template>
-  <div>
-    <h1>Sign Up</h1>
-    <form @submit.prevent="handleSignup">
-      <div>
-        <label for="name">Name:</label>
-        <input type="text" id="name" v-model="name" required />
+  <div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full space-y-8">
+      <h1 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+        Sign Up
+      </h1>
+      <form class="mt-8 space-y-6" @submit.prevent="handleSignup">
+        <div class="rounded-md shadow-sm space-y-4">
+          <div>
+            <label for="name" class="sr-only">Name</label>
+            <input id="name" name="name" type="text" required v-model="name"
+                   class="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                   placeholder="Name">
+          </div>
+          <div>
+            <label for="email" class="sr-only">Email</label>
+            <input id="email" name="email" type="email" autocomplete="email" required v-model="email"
+                   class="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                   placeholder="Email address">
+          </div>
+          <div>
+            <label for="password" class="sr-only">Password</label>
+            <input id="password" name="password" type="password" autocomplete="new-password" required v-model="password"
+                   class="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                   placeholder="Password">
+          </div>
+        </div>
+        <div>
+          <button type="submit" :disabled="loading"
+                  class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            Sign Up
+          </button>
+        </div>
+      </form>
+      <p v-if="errorMessage" class="mt-2 text-center text-sm text-red-600">
+        {{ errorMessage }}
+      </p>
+      <div v-if="loading" class="spinner mt-4 flex justify-center">
+        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
       </div>
-      <div>
-        <label for="email">Email:</label>
-        <input type="email" id="email" v-model="email" required />
-      </div>
-      <div>
-        <label for="password">Password:</label>
-        <input type="password" id="password" v-model="password" required />
-      </div>
-      <button type="submit" :disabled="loading">Sign Up</button>
-    </form>
-    <p v-if="errorMessage">{{ errorMessage }}</p>
-    <div v-if="loading" class="spinner"></div>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
 
@@ -62,6 +83,14 @@ const handleSignup = async () => {
     loading.value = false
   }
 }
+
+
+onMounted(() => {
+  const authToken = localStorage.getItem('authToken')
+  if (authToken) {
+    router.push('/')
+  }
+})
 </script>
 
 <style scoped>

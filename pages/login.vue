@@ -1,19 +1,28 @@
 <template>
-  <div class="login">
-    <form @submit.prevent="handleLogin">
-      <h1>Login</h1>
-      <div>
-        <label for="email">Email:</label>
-        <input type="email" v-model="email" required autocomplete="email"/>
+  <div class="flex items-center justify-center min-h-screen bg-gray-100">
+    <div class="w-full max-w-md px-8 py-6 bg-white shadow-lg rounded-lg">
+      <form @submit.prevent="handleLogin" class="space-y-6">
+        <h1 class="text-2xl font-bold text-center text-gray-800">Login</h1>
+        <div>
+          <label for="email" class="block text-sm font-medium text-gray-700">Email:</label>
+          <input type="email" v-model="email" required autocomplete="email"
+                 class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+        </div>
+        <div>
+          <label for="password" class="block text-sm font-medium text-gray-700">Password:</label>
+          <input type="password" v-model="password" required
+                 class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+        </div>
+        <button type="submit" :disabled="loading"
+                class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+          Login
+        </button>
+        <p v-if="errorMessage" class="mt-2 text-sm text-red-600">{{ errorMessage }}</p>
+      </form>
+      <div v-if="loading" class="spinner mt-4 flex justify-center">
+        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
       </div>
-      <div>
-        <label for="password">Password:</label>
-        <input type="password" v-model="password" required />
-      </div>
-      <button type="submit" :disabled="loading">Login</button>
-      <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
-      <div v-if="loading" class="spinner"></div>
-    </form>
+    </div>
   </div>
 </template>
 
@@ -60,11 +69,6 @@ const handleLogin = async () => {
 </script>
 
 <style scoped>
-.error {
-  color: #ff0000;
-  margin-top: 10px;
-}
-
 .spinner {
   border: 4px solid rgba(0, 0, 0, 0.1);
   border-left-color: #000;

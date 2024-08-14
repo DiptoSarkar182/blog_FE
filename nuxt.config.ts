@@ -3,12 +3,14 @@ export default defineNuxtConfig({
   compatibilityDate: '2024-04-03',
   devtools: { enabled: true },
   devServer: {
-    port: 5173
+    port: 8181
   },
   plugins: [
     '~/plugins/toast.js'
   ],
-  modules: ['@nuxt/image'],
+  modules: ['@nuxt/image',
+    '@nuxtjs/tailwindcss'
+  ],
   image: {
     // Options
   },
