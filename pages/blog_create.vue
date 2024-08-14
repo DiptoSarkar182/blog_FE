@@ -14,12 +14,13 @@
         <label for="blog_image">Image:</label>
         <input type="file" id="blog_image" @change="handleFileUpload" />
       </div>
-      <button type="submit">Submit</button>
+      <button type="submit" :disabled="loading">Submit</button>
     </form>
     <p v-if="message">{{ message }}</p>
     <ul v-if="errors.length">
       <li v-for="error in errors" :key="error">{{ error }}</li>
     </ul>
+    <div v-if="loading" class="spinner"></div>
   </div>
 </template>
 
@@ -33,6 +34,7 @@ const content = ref('')
 const blogImage = ref(null)
 const message = ref('')
 const errors = ref([])
+const loading = ref(false)
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
 const router = useRouter()
 
@@ -41,9 +43,13 @@ const handleFileUpload = (event) => {
 }
 
 const submitBlog = async () => {
+  loading.value = true
+  message.value = ''
+  errors.value = []
   const token = localStorage.getItem('authToken')
   if (!token) {
     message.value = 'You must be logged in to submit a blog post.'
+    loading.value = false
     return
   }
 
@@ -81,6 +87,8 @@ const submitBlog = async () => {
     } else {
       message.value = 'Failed to submit blog. Please try again.'
     }
+  } finally {
+    loading.value = false
   }
 }
 </script>
@@ -105,5 +113,20 @@ const submitBlog = async () => {
 }
 .blog-form button {
   padding: 0.5em 1em;
+}
+.spinner {
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-left-color: #000;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  animation: spin 1s linear infinite;
+  margin: 10px auto;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 </style>

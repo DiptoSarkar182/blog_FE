@@ -1,5 +1,5 @@
 <template>
-  <div class="blog-edit" v-if="blog">
+  <div class="blog-edit" v-if="!loading && blog">
     <h2>Edit Blog Post</h2>
     <form @submit.prevent="updateBlog">
       <div>
@@ -18,8 +18,12 @@
       <button type="submit">Update Post</button>
     </form>
   </div>
-  <div v-else>
+  <div v-else-if="loading">
     <p>Loading...</p>
+    <div class="spinner"></div>
+  </div>
+  <div v-else>
+    <p>Blog not found.</p>
   </div>
 </template>
 
@@ -33,8 +37,10 @@ const route = useRoute()
 const router = useRouter()
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
 const selectedFile = ref(null)
+const loading = ref(false)
 
 const fetchBlog = async (id) => {
+  loading.value = true
   try {
     const token = localStorage.getItem('authToken')
     if (!token) {
@@ -52,6 +58,8 @@ const fetchBlog = async (id) => {
     }
   } catch (error) {
     console.error('Failed to fetch blog:', error)
+  } finally {
+    loading.value = false
   }
 }
 
@@ -60,6 +68,7 @@ const onFileChange = (event) => {
 }
 
 const updateBlog = async () => {
+  loading.value = true
   try {
     const token = localStorage.getItem('authToken')
     if (!token) {
@@ -87,6 +96,8 @@ const updateBlog = async () => {
     }
   } catch (error) {
     console.error('Failed to update blog:', error)
+  } finally {
+    loading.value = false
   }
 }
 
@@ -102,5 +113,20 @@ onMounted(() => {
 .blog-edit {
   max-width: 600px;
   margin: 0 auto;
+}
+.spinner {
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-left-color: #000;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  animation: spin 1s linear infinite;
+  margin: 10px auto;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 </style>
