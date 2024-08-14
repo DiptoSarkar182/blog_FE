@@ -1,3 +1,4 @@
+// layouts/default.vue
 <template>
   <div>
     <header class="bg-gray-800 text-white p-4">
@@ -6,9 +7,9 @@
           <NuxtLink to="/" class="text-white hover:text-gray-300">BlogWebsite</NuxtLink>
         </div>
         <div class="space-x-4">
-          <NuxtLink v-if="!isLoggedIn" to="/login" class="text-white hover:text-gray-300">Login</NuxtLink>
-          <NuxtLink v-if="!isLoggedIn" to="/signup" class="text-white hover:text-gray-300">Signup</NuxtLink>
-          <a v-if="isLoggedIn" @click="logout" class="btn bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded cursor-pointer">Logout</a>
+          <NuxtLink v-if="!isLoggedIn && !isLoading" to="/login" class="text-white hover:text-gray-300">Login</NuxtLink>
+          <NuxtLink v-if="!isLoggedIn && !isLoading" to="/signup" class="text-white hover:text-gray-300">Signup</NuxtLink>
+          <a v-if="isLoggedIn && !isLoading" @click="logout" class="btn bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded cursor-pointer">Logout</a>
         </div>
       </nav>
     </header>
@@ -50,11 +51,21 @@ onMounted(() => {
   }
 })
 
-const logout = () => {
+const logout = async () => {
   if (process.client) {
-    localStorage.removeItem('authToken')
-    isLoggedIn.value = false
-    router.push('/login')
+    try {
+      await axios.delete(`${API_BASE_URL}/users/sign_out`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('authToken')}`
+        }
+      })
+    } catch (error) {
+      console.error('Error logging out:', error)
+    } finally {
+      localStorage.removeItem('authToken')
+      isLoggedIn.value = false
+      router.push('/login')
+    }
   }
 }
 </script>
