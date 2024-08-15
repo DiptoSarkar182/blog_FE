@@ -13,6 +13,12 @@
           <input type="password" v-model="password" required
                  class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
         </div>
+        <div>
+          <label for="remember_me" class="inline-flex items-center">
+            <input type="checkbox" v-model="rememberMe" class="form-checkbox">
+            <span class="ml-2 text-sm text-gray-600">Remember Me</span>
+          </label>
+        </div>
         <button type="submit" :disabled="loading"
                 class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
           Login
@@ -21,6 +27,9 @@
       </form>
       <div v-if="loading" class="spinner mt-4 flex justify-center">
         <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+      </div>
+      <div class="mt-4 text-center">
+        <NuxtLink to="/forgot_password" class="text-sm text-blue-600 hover:underline">Forgot Password?</NuxtLink>
       </div>
     </div>
   </div>
@@ -33,6 +42,7 @@ import axios from 'axios'
 
 const email = ref('')
 const password = ref('')
+const rememberMe = ref(false)
 const errorMessage = ref('')
 const loading = ref(false)
 const router = useRouter()
@@ -45,7 +55,8 @@ const handleLogin = async () => {
     const response = await axios.post(`${API_BASE_URL}/users/sign_in`, {
       user: {
         email: email.value,
-        password: password.value
+        password: password.value,
+        remember_me: rememberMe.value
       }
     })
 
@@ -66,6 +77,13 @@ const handleLogin = async () => {
     loading.value = false
   }
 }
+
+onMounted(() => {
+  const authToken = localStorage.getItem('authToken')
+  if (authToken) {
+    router.push('/')
+  }
+})
 </script>
 
 <style scoped>

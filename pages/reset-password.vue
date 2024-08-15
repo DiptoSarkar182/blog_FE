@@ -1,28 +1,17 @@
+<!-- pages/reset-password.vue -->
 <template>
   <div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
     <div class="max-w-md w-full space-y-8">
       <h1 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
-        Sign Up
+        Reset Password
       </h1>
-      <form class="mt-8 space-y-6" @submit.prevent="handleSignup">
+      <form class="mt-8 space-y-6" @submit.prevent="handleResetPassword">
         <div class="rounded-md shadow-sm space-y-4">
           <div>
-            <label for="name" class="sr-only">Name</label>
-            <input id="name" name="name" type="text" required v-model="name"
+            <label for="password" class="sr-only">New Password</label>
+            <input id="password" name="password" type="password" required v-model="password"
                    class="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                   placeholder="Name">
-          </div>
-          <div>
-            <label for="email" class="sr-only">Email</label>
-            <input id="email" name="email" type="email" autocomplete="email" required v-model="email"
-                   class="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                   placeholder="Email address">
-          </div>
-          <div>
-            <label for="password" class="sr-only">Password</label>
-            <input id="password" name="password" type="password" autocomplete="new-password" required v-model="password"
-                   class="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                   placeholder="Password">
+                   placeholder="New Password">
           </div>
           <div>
             <label for="password_confirmation" class="sr-only">Confirm Password</label>
@@ -34,12 +23,15 @@
         <div>
           <button type="submit" :disabled="loading"
                   class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-            Sign Up
+            Reset Password
           </button>
         </div>
       </form>
       <p v-if="errorMessage" class="mt-2 text-center text-sm text-red-600">
         {{ errorMessage }}
+      </p>
+      <p v-if="successMessage" class="mt-2 text-center text-sm text-green-600">
+        {{ successMessage }}
       </p>
       <div v-if="loading" class="spinner mt-4 flex justify-center">
         <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
@@ -49,41 +41,56 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+
+import { useRouter, useRoute } from 'vue-router'
 import axios from 'axios'
 
-const name = ref('')
-const email = ref('')
 const password = ref('')
 const passwordConfirmation = ref('')
 const errorMessage = ref('')
+const successMessage = ref('')
 const loading = ref(false)
 const router = useRouter()
+const route = useRoute()
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
 
-const handleSignup = async () => {
+const resetPasswordToken = route.query.reset_password_token
+
+const handleResetPassword = async () => {
   loading.value = true
   errorMessage.value = ''
+  successMessage.value = ''
+  
+  if (!resetPasswordToken) {
+    errorMessage.value = 'Invalid or missing token.'
+    loading.value = false
+    return
+  }
+
   try {
-    const response = await axios.post(`${API_BASE_URL}/users/sign_up`, {
+    // Reset the password
+    const response = await axios.put(`${API_BASE_URL}/users/password`, {
       user: {
-        name: name.value,
-        email: email.value,
+        reset_password_token: resetPasswordToken,
         password: password.value,
         password_confirmation: passwordConfirmation.value
       }
     })
 
-    if (response.data.status.code === 200) {
-      alert('Sign up is complete. Please login.')
-      router.push('/login')
+    console.log('Response:', response)
+
+    if (response.status === 200 && response.data.message) {
+      successMessage.value = response.data.message
+      setTimeout(() => {
+        router.push('/login')
+      }, 2000)
     } else {
-      errorMessage.value = response.data.status.message
+      errorMessage.value = response.data.message || 'An error occurred. Please try again.'
     }
   } catch (error) {
-    if (error.response && error.response.data && error.response.data.status && error.response.data.status.message) {
-      errorMessage.value = error.response.data.status.message
+    console.error('Error:', error)
+    if (error.response && error.response.data && error.response.data.message) {
+      errorMessage.value = error.response.data.message
     } else {
       errorMessage.value = 'An error occurred. Please try again.'
     }
@@ -92,12 +99,7 @@ const handleSignup = async () => {
   }
 }
 
-onMounted(() => {
-  const authToken = localStorage.getItem('authToken')
-  if (authToken) {
-    router.push('/')
-  }
-})
+
 </script>
 
 <style scoped>
